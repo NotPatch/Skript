@@ -1,0 +1,146 @@
+#Version: 1.0a
+options:
+	p: &3Irk &7»
+	i: »
+command /trigger:
+	trigger:
+		open virtual chest inventory with size 5 named "&eIrk Seçim Menüsü" to player
+		format gui slot numbers between 0 and 8 of player with stone to nothing
+		format gui slot 9 of player with diamond sword to close then run function set(player, "İblis")
+function fallingOutlineExplosion(location: location, radius: number, velocity: number):
+	create an explosion of force {_velocity} at {_location}
+	loop blocks in radius {_radius} around {_location}:
+		if loop-block isn't air:
+        # This below will check that the block is in the outline of the radius.
+        # The random numbers are to make the explosion more realistic. That's optional. Larger numbers makes it less of a sphere/circle.
+			if distance between loop-block and {_location} > {_radius} - random number between 1 and 3:
+				# Checks if the y-coordinate of the exploded block is near a set y-coordinate. For some neat effect. Not really needed though.
+				if difference between y-coordinate of loop-block and y-coordinate of {_location} < random number between 0 and 2:
+					spawn falling block of loop-block at loop-block
+					set loop-block to air
+					# Push the block upwards so it doesn't get stuck and glitched in it's original spawn location.
+					push last spawned falling block up with force 1
+					# To pust the falling block at a velocity in a radius around the explosion at a explosion type direction.
+					push last spawned falling block direction from {_location} to last spawned falling block with force {_velocity}
+ 
+function fallingExplosion(location: location, radius: number, velocity: number):
+	create an explosion of force {_velocity} at {_location}
+	loop blocks in radius {_radius} around {_location}:
+		if loop-block isn't air:
+			spawn falling block of loop-block at loop-block
+			set loop-block to air
+			push last spawned falling block up with force 1
+			push last spawned falling block direction from {_location} to last spawned falling block with force {_velocity}
+	
+function set(p: player , t: text):
+	set {ırk::%{_p}%} to "%{_t}%"
+	send "{@p} &c%{_t}% &eIrkını Seçtin" to {_p}
+	send "{@p} <cmd:/özellikler %{_t}%>&c%{_t}% &eIrkının Özelliklerine Göz Atmak Için Tıklayın<reset>" to {_p}
+	set {_p}'s name to "&c&n%{_t}%"
+	set {power::%{_p}%} to 30
+	send "%{power::%{_p}%}%" to {_p}
+	
+function open(p: player):
+	open virtual chest inventory with size 1 named "&cEmin misin" to {_p}
+	format gui slot 4 of {_p} with emerald block named "&aEminim" with lore "||&7● &eInduraya Dönüşmek Karşılığında Canımı ve Gücümü &7100/80 &eFeda Edebilirim" to close then execute {_p} command "indura"
+	
+
+command /test [<text>]:
+	trigger:
+		set(player, "İblis")
+		
+command /özellikler [<text>]:
+	trigger:
+		if arg 1 is "İblis":
+			send "s"
+			
+command /danafor:
+	trigger:
+		if {ırk::%player%} is "Iblis":
+			if {power::%player%} is bigger than 9999:
+				loop blocks in radius 30 around player:
+					loop players in radius 30 of the player:
+						loop-block isn't air:
+							delete loop-block
+							set {power::%player%} to 1000
+							if loop-player is not event-player:
+								damage loop-player by 1 
+								if {ırk::%loop-player%} isn't "Iblis":
+									remove (random integer between 500 and 3000) from {power::%loop-player%}
+			else if {power::%player%} is smaller than 10000:
+				send "{@p} &eGüç Seviyen En Az &c&n10000 &eOlmalı&7."
+		else:
+			send "{@p} &eIblis Irkında Değilsin&7."
+			send "%{ırk::%player%}%"
+			
+#command /fullcounter:
+#	trigger:
+#		if {fullcounter::%player%} isn't set:
+#			set {fullcounter::%player%} to true
+#		else:
+#			loop {dp::*}:
+#				send "%loop-value%" to player
+#				loop {d::*}:
+#					send "%loop-value-2%" to player
+#					if %player% does not contain %loop-value-1%:
+#						damage loop-value-1 by loop-value-2
+
+command /indura:
+	trigger:
+		if {indura::%player%} isn't set:
+			if {power::%player%} is bigger than 50000:
+				open(player)
+				set {indura::%player%} to true
+			else:
+				send player title "&cIndura" with subtitle "&eBüyü Gücün Yetersiz" for 3 seconds
+				send "&cIndura {@i} &e100&7/&a10 &eŞans ile indura dönüşümü gerçekleştirebilirsin" to player
+				chance of 90%:
+					apply potion of slowness 1000 to player for 10 seconds
+					apply potion of nausea 1000 to player for 10 seconds
+					apply potion of poison 1000 to player for 10 seconds
+					apply potion of wither 1000 to player for 10 seconds
+					wait 10 seconds
+					delete {power::%player%}
+					kill player
+				chance of 10%:
+					wait 5 seconds
+					loop players in radius 30 of the player:
+						set {_s} to ({power::%player%} / 100)
+						remove ({_s} * 80) from {power::%player%}
+						send "%{power::%player%}%"
+						send loop-player title "&cIndura Ortaya Çıktı" with subtitle "&4&n&k&l!k!l!j!I!1!!k!l!j!I!1!'" for 3 seconds
+						play raw sound "mob.enderdragon.end" at loop-player with pitch 1 volume 30
+						set {indura::%player%} to true
+		else:
+			loop players in radius 30 of the player:
+				set {_s} to ({power::%player%} / 100)
+				remove ({_s} * 80) from {power::%player%}
+				send "%{power::%player%}%"
+				send loop-player title "&cIndura Ortaya Çıktı" with subtitle "&4&n&k&l!k!l!j!I!1!!k!l!j!I!1!'" for 3 seconds
+				play raw sound "mob.enderdragon.end" at loop-player with pitch 1 volume 30
+		
+on damage:
+	if {indura::%attacker%} is set:
+		set victim's flight speed to 5
+		push the victim backwards at speed 2
+		wait 1 seconds
+		fallingExplosion(location of victim, 6, 0.5)
+		
+command /deleteindura:
+	trigger:
+		delete {indura::%player%}
+		set {power::%player%} to 300
+			
+command /deleteimage:
+	trigger:
+		send "%{power::%player%}%"
+		delete {d::%player%}
+		delete {dp::%player%}
+		
+command /send:
+	trigger:
+		set {power::%player%} to 100000
+		send "%{power::%player%}%"
+		
+on rightclick with ender pearl:
+	teleport player to location of target block
