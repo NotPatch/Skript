@@ -11,16 +11,11 @@ function fallingOutlineExplosion(location: location, radius: number, velocity: n
 	create an explosion of force {_velocity} at {_location}
 	loop blocks in radius {_radius} around {_location}:
 		if loop-block isn't air:
-        # This below will check that the block is in the outline of the radius.
-        # The random numbers are to make the explosion more realistic. That's optional. Larger numbers makes it less of a sphere/circle.
 			if distance between loop-block and {_location} > {_radius} - random number between 1 and 3:
-				# Checks if the y-coordinate of the exploded block is near a set y-coordinate. For some neat effect. Not really needed though.
 				if difference between y-coordinate of loop-block and y-coordinate of {_location} < random number between 0 and 2:
 					spawn falling block of loop-block at loop-block
 					set loop-block to air
-					# Push the block upwards so it doesn't get stuck and glitched in it's original spawn location.
 					push last spawned falling block up with force 1
-					# To pust the falling block at a velocity in a radius around the explosion at a explosion type direction.
 					push last spawned falling block direction from {_location} to last spawned falling block with force {_velocity}
  
 function fallingExplosion(location: location, radius: number, velocity: number):
