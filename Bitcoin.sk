@@ -1,4 +1,5 @@
-#Version: 1.0 ▌ Sakın Silme
+#Version: 1.0
+#Versionu Sakın Silmeyin
 command /bitcoin [<text>] [<int>]:
 	trigger:
 		if arg 1 isn't set:
