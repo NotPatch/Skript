@@ -1,4 +1,4 @@
-#Version: 2
+#Version: 1.1
 #Versionu Sakın Silmeyin
 command /bitcoin [<text>] [<int>]:
 	trigger:
