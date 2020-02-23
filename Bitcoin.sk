@@ -60,20 +60,11 @@ on load:
 		wait 3 minute
 		remove 1 from {bitcoin::süre}
 		delete holo object "bitcoin"
-		create holo object "&6&lBitcoin;&8&m---------------------------;&fBitcoin Değeri &f» &a&n%{bitcoin::değer}% TL;&7&m--;&fDeğerin değişmesine &e&n%{bitcoin::süre}% Dakika;;&7(&bMenü için tıkla&7);&8&m-------------------------" with id "bitcoin" at {bitcoin:loc}
+		create holo object "&6&lBitcoin;&8&m---------------------------;&fBitcoin Değeri &f» &a&n%{bitcoin::değer}% TL;&7&m--;&fDeğerin değişmesine &e&n%{bitcoin::süre}% Dakika;;&7(&bMenü için tıkla&7);&8&m-------------------------" with id "bitcoin" at {bitcoin::loc}
 	set {bitcoin::süre} to 10
 	set {bitcoin::değer} to (random integer between 15 and 32)
 	yenile()
-on load:
-	if line 1 in file "plugins/Skript/scripts/%script's name%.sk" isn't line 1 from url "https://raw.githubusercontent.com/NotPatch/Skript/master/Bitcoin.sk":
-		set {_n} to line 1 in file "plugins/Skript/scripts/%script's name%.sk"
-		set {_s} to line 1 from url "https://raw.githubusercontent.com/NotPatch/Skript/master/Bitcoin.sk"
-		replace all "##Version: " with "" in {_s}
-		replace all "##Version: " with "" in {_n}
-		create dir "plugins/Bitcoin/backups/%{_n}%"
-		set file contents of "plugins/Bitcoin/backups/%{_n}%/%script's name%.sk" to file contents of "plugins/Skript/scripts/%script's name%.sk"
-		set file contents of "plugins/Skript/scripts/%script's name%.sk" to contents from url "https://raw.githubusercontent.com/NotPatch/Skript/master/Bitcoin.sk"
-		execute console command "/sk reload %script's name%"
+
 on first join:
 	set {makbuz::%player%} to a new book
 	add page "" to {makbuz::%player%}
