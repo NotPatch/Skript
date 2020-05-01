@@ -1,0 +1,19 @@
+#Version: 1.0
+on load:
+	set {_version} to line 1 from url "*raw text website*"
+command /otomute [<text>] [<text>]:
+	permission: op
+	trigger:
+		if arg 1 isn't set:
+			gui(Player)
+			
+function gui(p : Player):
+	create a gui with id "otomute" with virtual chest with 1 rows named "&eOtomatik Susturma":
+		if {otomute::aktif} is "Aktif":
+			make gui slot 8 with greenclay named "&a%{otomute::aktif}%"
+		else if {otomute::aktif} is "Deaktif":
+			make gui slot 8 with redclay named "&c%{otomute::aktif}%"
+		else:
+			make gui slot 8 with lever named "&c✖ &7Skript Hatalı &c✖" with lore "||&e&nDüzeltmek için tıkla ve bana bırak||":
+				
+		open gui "otomute" to {_p}
