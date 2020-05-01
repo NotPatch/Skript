@@ -1,4 +1,5 @@
-#Version: 1.1
+options:
+	version: 1.0
 on load:
 	set {_version} to line 1 from url "*raw text website*"
 command /otomute [<text>] [<text>]:
